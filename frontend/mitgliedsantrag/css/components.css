@@ -33,3 +33,12 @@ label{font-size:13px;font-weight:750}input{width:100%;max-width:100%;min-width:0
   box-sizing:border-box;
   font-variant-numeric:tabular-nums;
 }
+
+
+/* V1.4.4: native date picker restored, width fixed */
+input[type="date"]{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}

@@ -132,12 +132,11 @@ function addFamilyRow() {
   row.innerHTML = `
     <label>Vorname<input name="fam_vorname" placeholder="Vorname"></label>
     <label>Nachname<input name="fam_nachname" placeholder="Nachname"></label>
-    <label>Geburtsdatum<input type="text" class="date-input" inputmode="numeric" name="fam_geburtsdatum" placeholder="TT.MM.JJJJ" pattern="\\d{2}\\.\\d{2}\\.\\d{4}"></label>
+    <label>Geburtsdatum<input type="date" name="fam_geburtsdatum"></label>
     <button type="button" class="outline-btn">Entfernen</button>
   `;
   row.querySelector("button").addEventListener("click", () => row.remove());
   document.getElementById("familyList").appendChild(row);
-  initDateInputs();
 }
 
 function getFamilyMembers() {
@@ -225,55 +224,7 @@ async function lookupBankName(iban) {
   }
 }
 
-function initDateInputs() {
-  document.querySelectorAll(".date-input").forEach(input => {
-    input.addEventListener("input", () => {
-      let value = input.value.replace(/\D/g, "").slice(0, 8);
 
-      if (value.length >= 5) {
-        value = value.replace(/(\d{2})(\d{2})(\d{1,4})/, "$1.$2.$3");
-      } else if (value.length >= 3) {
-        value = value.replace(/(\d{2})(\d{1,2})/, "$1.$2");
-      }
-
-      input.value = value;
-    });
-
-    input.addEventListener("blur", () => {
-      if (!input.value) return;
-
-      const match = input.value.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
-      if (!match) return;
-
-      const day = Number(match[1]);
-      const month = Number(match[2]);
-      const year = Number(match[3]);
-      const date = new Date(year, month - 1, day);
-
-      const valid =
-        date.getFullYear() === year &&
-        date.getMonth() === month - 1 &&
-        date.getDate() === day;
-
-      if (!valid) {
-        input.setCustomValidity("Bitte ein gültiges Datum im Format TT.MM.JJJJ eingeben.");
-      } else {
-        input.setCustomValidity("");
-      }
-    });
-  });
-}
-
-function normalizeDateForBackend(value) {
-  const text = String(value || "").trim();
-
-  const de = text.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
-  if (de) {
-    return `${de[3]}-${de[2]}-${de[1]}`;
-  }
-
-  return text;
-}
 function initSignature() {
   const canvas = document.getElementById("signature");
   const ctx = canvas.getContext("2d");
@@ -334,13 +285,8 @@ function collectFormData() {
   data.datenschutz = fd.has("datenschutz");
   data.sepa = fd.has("sepa");
   data.foto = fd.has("foto");
-  data.geburtsdatum = normalizeDateForBackend(data.geburtsdatum);
-  data.eintrittsdatum = normalizeDateForBackend(data.eintrittsdatum);
   data.signature = document.getElementById("signature").toDataURL("image/png");
-  data.familienmitglieder = getFamilyMembers().map(member => ({
-    ...member,
-    geburtsdatum: normalizeDateForBackend(member.geburtsdatum)
-  }));
+  data.familienmitglieder = getFamilyMembers();
 
   return data;
 }
@@ -395,7 +341,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initMembershipCards();
   initFamily();
   initIban();
-  initDateInputs();
   initSignature();
   initSubmit();
 });

@@ -84,3 +84,17 @@ Korrekturen:
   - lokale BLZ-Liste erweitert
   - Online-Fallback über OpenIBAN bleibt optional
   - manuelle Eingabe bleibt möglich
+
+
+## Release V1.4.4
+
+Fix:
+- Datumsfelder wieder auf native `type="date"` zurückgestellt.
+- Kalender-Picker ist wieder verfügbar.
+- fehlerhafte `TT.MM.JJJJ`-Pattern-Validierung entfernt.
+- zusätzliche CSS-Regeln gegen zu breite Date-Felder auf iPhone/Safari ergänzt.
+- IBAN/Kreditinstitut-Ermittlung aus V1.4.2 bleibt erhalten.
+
+Backend:
+- unverändert.
+- `PDF.gs` aus V1.4.3 bleibt aktiv.
