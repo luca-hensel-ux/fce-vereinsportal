@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mitgliedsantrag – 1. FC Engelsbrand e.V.</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <img src="assets/logo.png" class="club-logo" alt="1. FC Engelsbrand Logo">
+      <nav class="side-steps" aria-label="Formularschritte">
+        <button class="side-step active" type="button" data-jump="1"><span>1</span><b>Persönliche<br>Daten</b></button>
+        <button class="side-step" type="button" data-jump="2"><span>2</span><b>Mitgliedschaft</b></button>
+        <button class="side-step" type="button" data-jump="3"><span>3</span><b>Bankverbindung</b></button>
+        <button class="side-step" type="button" data-jump="4"><span>4</span><b>Einverständnisse</b></button>
+        <button class="side-step" type="button" data-jump="5"><span>5</span><b>Unterschrift</b></button>
+      </nav>
+      <div class="help-box">
+        <strong>Fragen?</strong>
+        <span>Wir helfen gerne weiter.</span>
+        <small>info@fc-engelsbrand.de</small>
+      </div>
+    </aside>
+
+    <main class="content-card">
+      <header class="mobile-header">
+        <img src="assets/logo.png" class="mobile-logo" alt="1. FC Engelsbrand Logo">
+      </header>
+
+      <header class="page-header">
+        <div>
+          <h1>1. FC Engelsbrand e.V.</h1>
+          <p>Mitgliedsantrag</p>
+        </div>
+        <div class="security-note">
+          <span>✓</span>
+          <div><strong>Sicher & digital</strong><small>Online-Antrag mit SEPA-Unterschrift</small></div>
+        </div>
+      </header>
+
+      <div class="top-progress">
+        <button class="dot active" type="button" data-step-dot="1">1</button>
+        <button class="dot" type="button" data-step-dot="2">2</button>
+        <button class="dot" type="button" data-step-dot="3">3</button>
+        <button class="dot" type="button" data-step-dot="4">4</button>
+        <button class="dot" type="button" data-step-dot="5">5</button>
+      </div>
+
+      <form id="memberForm" novalidate>
+        <section class="step active" data-step="1">
+          <div class="step-title">
+            <div class="title-icon">♡</div>
+            <div>
+              <h2>Persönliche Daten</h2>
+              <p>Schritt 1 von 5</p>
+            </div>
+          </div>
+
+          <div class="field-card">
+            <h3>Persönliche Angaben</h3>
+            <div class="grid grid-3">
+              <label>Vorname <em>*</em><input required name="vorname" autocomplete="given-name" placeholder="Vorname"></label>
+              <label>Nachname <em>*</em><input required name="nachname" autocomplete="family-name" placeholder="Nachname"></label>
+              <label>Geburtsdatum <em>*</em><input required type="date" name="geburtsdatum"></label>
+            </div>
+          </div>
+
+          <div class="field-card">
+            <h3>Kontaktdaten</h3>
+            <div class="grid grid-3">
+              <label>Telefon<input name="telefon" autocomplete="tel" placeholder="Festnetz optional"></label>
+              <label>Mobil<input name="mobil" autocomplete="tel" placeholder="Mobilnummer optional"></label>
+              <label>E-Mail <em>*</em><input required type="email" name="email" autocomplete="email" placeholder="E-Mail-Adresse"></label>
+            </div>
+          </div>
+
+          <div class="field-card">
+            <h3>Anschrift</h3>
+            <div class="grid address-grid">
+              <label>Straße <em>*</em><input required name="strasse" autocomplete="address-line1" placeholder="Straßenname"></label>
+              <label>Hausnummer <em>*</em><input required name="hausnummer" placeholder="Nr."></label>
+              <label>PLZ <em>*</em><input required name="plz" inputmode="numeric" pattern="[0-9]{5}" autocomplete="postal-code" placeholder="PLZ"></label>
+              <label>Ort <em>*</em><input required name="ort" autocomplete="address-level2" placeholder="Wohnort"></label>
+            </div>
+          </div>
+        </section>
+
+        <section class="step" data-step="2">
+          <div class="step-title">
+            <div class="title-icon">⚽</div>
+            <div>
+              <h2>Mitgliedschaft</h2>
+              <p>Schritt 2 von 5</p>
+            </div>
+          </div>
+
+          <div class="membership-cards">
+            <button type="button" class="membership-card" data-plan="Erwachsene" data-fee="72">
+              <span class="plan-icon">👤</span><strong>Erwachsene</strong><b>72 €</b><small>pro Jahr</small><i>✓</i>
+            </button>
+            <button type="button" class="membership-card" data-plan="Jugendliche" data-fee="48">
+              <span class="plan-icon">⚽</span><strong>Jugendliche</strong><b>48 €</b><small>pro Jahr</small><i>✓</i>
+            </button>
+            <button type="button" class="membership-card" data-plan="Familie" data-fee="108">
+              <span class="plan-icon">👨‍👩‍👧</span><strong>Familie</strong><b>108 €</b><small>pro Jahr</small><i>✓</i>
+            </button>
+          </div>
+
+          <input type="hidden" id="mitgliedschaft" name="mitgliedschaft" required>
+          <input type="hidden" id="jahresbeitrag" name="jahresbeitrag">
+
+          <div class="field-card">
+            <div class="grid">
+              <label>Mitgliedschaft beginnt ab <em>*</em><input required type="date" name="eintrittsdatum"></label>
+            </div>
+          </div>
+
+          <div class="info-box important">
+            <div class="info-icon">i</div>
+            <div>
+              <p>Schüler, Studenten und Auszubildende zahlen bis Beendigung der Ausbildung den ermäßigten Jugendbeitrag.</p>
+              <p>Voraussetzung hierfür ist die jährliche Vorlage der entsprechenden Bescheinigung beim Vorstand bis 31. Januar. Erfolgt diese Vorlage nicht, wird automatisch der Erwachsenenbeitrag eingezogen.</p>
+              <p class="cancel-note">Die Mitgliedschaft kann nur zum Jahresende schriftlich beim Vorstand gekündigt werden.</p>
+              <p>Der Mitgliedsbeitrag wird vom Girokonto eingezogen.</p>
+            </div>
+          </div>
+
+          <div class="family-section" id="familySection">
+            <div class="family-header">
+              <div>
+                <h3>Weitere Familienmitglieder</h3>
+                <p>Nur bei Auswahl der Familienmitgliedschaft sichtbar.</p>
+              </div>
+              <button type="button" class="outline-btn" id="addFamily">+ Hinzufügen</button>
+            </div>
+            <div id="familyList"></div>
+          </div>
+        </section>
+
+        <section class="step" data-step="3">
+          <div class="step-title">
+            <div class="title-icon">€</div>
+            <div>
+              <h2>Bankverbindung</h2>
+              <p>Schritt 3 von 5</p>
+            </div>
+          </div>
+
+          <div class="field-card">
+            <h3>SEPA-Lastschriftmandat</h3>
+            <div class="grid">
+              <label>Kontoinhaber <em>*</em><input required name="kontoinhaber" placeholder="Name des Kontoinhabers"></label>
+              <label>IBAN <em>*</em><input required id="iban" name="iban" placeholder="DE00 0000 0000 0000 0000 00" autocomplete="off"></label>
+              <label>Kreditinstitut<input id="kreditinstitut" name="kreditinstitut" placeholder="Wird aus IBAN ermittelt, sofern möglich"></label>
+            </div>
+            <p class="small-hint" id="bankHint">Die Bankermittlung erfolgt lokal über bekannte BLZ-Einträge. Für den Produktivbetrieb können wir die Liste erweitern.</p>
+          </div>
+        </section>
+
+        <section class="step" data-step="4">
+          <div class="step-title">
+            <div class="title-icon">✓</div>
+            <div>
+              <h2>Einverständnisse</h2>
+              <p>Schritt 4 von 5</p>
+            </div>
+          </div>
+
+          <div class="consent-list">
+            <label class="checkbox-row"><input required type="checkbox" name="satzung"><span>Ich erkenne die Satzung des 1. FC Engelsbrand e.V. an.</span></label>
+            <label class="checkbox-row"><input required type="checkbox" name="datenschutz"><span>Ich stimme der Verarbeitung meiner personenbezogenen Daten gemäß Datenschutzerklärung zu.</span></label>
+            <label class="checkbox-row"><input required type="checkbox" name="sepa"><span>Ich erteile dem 1. FC Engelsbrand e.V. ein SEPA-Lastschriftmandat für den Mitgliedsbeitrag.</span></label>
+            <label class="checkbox-row"><input required type="checkbox" name="foto"><span>Ich erkläre mich einverstanden, dass der 1. FC Engelsbrand Vorname, Name und Fotografien von mir und allen Familienmitgliedern von Vereins- und Sportveranstaltungen zur Berichterstattung und für Vereinsinformationen veröffentlichen darf.</span></label>
+          </div>
+        </section>
+
+        <section class="step" data-step="5">
+          <div class="step-title">
+            <div class="title-icon">✎</div>
+            <div>
+              <h2>Unterschrift</h2>
+              <p>Schritt 5 von 5</p>
+            </div>
+          </div>
+
+          <div class="signature-card">
+            <p>Bitte unterschreibe mit Finger, Maus oder Stift.</p>
+            <canvas id="signature" width="900" height="320"></canvas>
+          </div>
+          <button type="button" class="outline-btn mt-12" id="clearSignature">Unterschrift löschen</button>
+        </section>
+
+        <div class="form-actions">
+          <button type="button" class="back-btn hidden" id="backBtn">← Zurück</button>
+          <button type="button" class="next-btn" id="nextBtn">Weiter →</button>
+          <button type="submit" class="next-btn hidden" id="submitBtn">Antrag absenden →</button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
