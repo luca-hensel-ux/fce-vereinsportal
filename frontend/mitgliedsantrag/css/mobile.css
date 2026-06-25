@@ -1,4 +1,16 @@
 @media(max-width:900px){
+
+  input[type="date"]{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    -webkit-appearance:none;
+    appearance:none;
+  }
+  input[type="date"]::-webkit-date-and-time-value{
+    text-align:left;
+  }
+
   .app-shell{display:block;padding:0}
   .sidebar{display:none}
   .content-card{min-height:100vh;border-radius:0;box-shadow:none}

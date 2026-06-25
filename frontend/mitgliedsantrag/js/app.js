@@ -8,7 +8,17 @@ const CONFIG = {
     "66650085": "Sparkasse Pforzheim Calw",
     "66690000": "Volksbank pur eG",
     "60050101": "BW-Bank",
-    "66010075": "Postbank"
+    "66010075": "Postbank",
+    "66691200": "Volksbank pur eG",
+    "66692300": "Volksbank pur eG",
+    "66662220": "VR Bank Enz plus eG",
+    "66661244": "Raiffeisenbank im Kreis Calw eG",
+    "66670006": "Deutsche Bank",
+    "66680013": "Commerzbank",
+    "60010070": "Postbank Stuttgart",
+    "60040071": "Commerzbank Stuttgart",
+    "60070070": "Deutsche Bank Stuttgart",
+    "60090100": "Volksbank Stuttgart eG"
   }
 };
 
@@ -136,21 +146,80 @@ function initIban() {
   const iban = document.getElementById("iban");
   const bankField = document.getElementById("kreditinstitut");
   const hint = document.getElementById("bankHint");
+  let lookupTimer = null;
 
   iban.addEventListener("input", event => {
     const clean = event.target.value.replace(/\s/g, "").toUpperCase();
     event.target.value = clean.replace(/(.{4})/g, "$1 ").trim();
 
-    if (clean.startsWith("DE") && clean.length >= 12) {
-      const blz = clean.substring(4, 12);
-      if (CONFIG.bankByBlz[blz]) {
-        bankField.value = CONFIG.bankByBlz[blz];
-        hint.textContent = "Kreditinstitut automatisch anhand der BLZ erkannt.";
-      } else {
-        hint.textContent = "BLZ erkannt, aber noch nicht in der lokalen Bankliste enthalten.";
-      }
+    bankField.dataset.autoFilled = "false";
+
+    if (lookupTimer) {
+      clearTimeout(lookupTimer);
     }
+
+    if (!clean.startsWith("DE") || clean.length < 12) {
+      hint.textContent = "Bitte IBAN vollständig eingeben. Bei deutschen IBANs wird das Kreditinstitut automatisch ermittelt, sofern möglich.";
+      return;
+    }
+
+    const blz = clean.substring(4, 12);
+
+    if (CONFIG.bankByBlz[blz]) {
+      bankField.value = CONFIG.bankByBlz[blz];
+      bankField.dataset.autoFilled = "true";
+      hint.textContent = "Kreditinstitut automatisch anhand der BLZ erkannt.";
+      return;
+    }
+
+    hint.textContent = "Bank wird geprüft ...";
+
+    lookupTimer = setTimeout(async () => {
+      const bankName = await lookupBankName(clean);
+
+      if (bankName) {
+        bankField.value = bankName;
+        bankField.dataset.autoFilled = "true";
+        hint.textContent = "Kreditinstitut automatisch aus der IBAN ermittelt.";
+      } else {
+        hint.textContent = "Bank konnte nicht automatisch ermittelt werden. Bitte Kreditinstitut manuell eintragen.";
+      }
+    }, 450);
   });
+}
+
+async function lookupBankName(iban) {
+  // 1) Lokaler Fallback über die deutsche BLZ
+  const clean = iban.replace(/\s/g, "").toUpperCase();
+  if (clean.startsWith("DE") && clean.length >= 12) {
+    const blz = clean.substring(4, 12);
+    if (CONFIG.bankByBlz[blz]) {
+      return CONFIG.bankByBlz[blz];
+    }
+  }
+
+  // 2) Öffentlicher IBAN-Validator als Komfortfunktion
+  // Falls der Dienst nicht erreichbar ist oder CORS blockiert, fällt die Funktion sauber auf manuelle Eingabe zurück.
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+
+    const response = await fetch(
+      "https://openiban.com/validate/" + encodeURIComponent(clean) + "?getBIC=true&validateBankCode=true",
+      { signal: controller.signal }
+    );
+
+    clearTimeout(timeout);
+
+    if (!response.ok) return "";
+
+    const result = await response.json();
+    const bankData = result.bankData || {};
+
+    return bankData.name || bankData.bankName || bankData.bank || "";
+  } catch (error) {
+    return "";
+  }
 }
 
 function initSignature() {

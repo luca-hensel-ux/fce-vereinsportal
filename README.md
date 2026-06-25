@@ -56,3 +56,19 @@ Repository → Settings → Pages:
 - Folder: `/ (root)`
 
 Danach ist der Mitgliedsantrag direkt über die GitHub-Pages-Hauptadresse erreichbar.
+
+
+## Release V1.4.1
+
+Kleine Frontend-Optimierung:
+- iPhone-Fix für Datumsfelder
+- automatische Ermittlung des Kreditinstituts aus der IBAN
+- lokale BLZ-Liste + Online-Fallback; wenn keine Ermittlung möglich ist, bleibt manuelle Eingabe möglich
+
+Für GitHub hochladen:
+- `index.html`
+- `README.md`
+- `frontend/`
+
+Nicht hochladen:
+- `backend/`
