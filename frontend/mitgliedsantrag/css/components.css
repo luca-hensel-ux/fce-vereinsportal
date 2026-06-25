@@ -42,3 +42,13 @@ input[type="date"]{
   min-width:0;
   box-sizing:border-box;
 }
+
+
+/* V1.4.5: final native date field fix */
+input[type="date"]{
+  display:block;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  box-sizing:border-box !important;
+}

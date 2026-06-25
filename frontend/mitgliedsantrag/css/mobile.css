@@ -75,3 +75,16 @@
   .info-box{grid-template-columns:30px 1fr;padding:14px;font-size:13px}.family-header{flex-direction:column}.family-row{grid-template-columns:1fr}
   .form-actions{position:sticky;bottom:0;background:white;padding:12px 0 0}.next-btn,.back-btn,.outline-btn{width:100%;padding:14px}canvas{height:220px}
 }
+
+
+@media(max-width:900px){
+  input[type="date"]{
+    display:block;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+    -webkit-appearance:auto;
+    appearance:auto;
+  }
+}

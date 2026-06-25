@@ -98,3 +98,17 @@ Fix:
 Backend:
 - unverändert.
 - `PDF.gs` aus V1.4.3 bleibt aktiv.
+
+
+## Release V1.4.5
+
+Hard-Fix:
+- Alle textbasierten Datumsfelder wurden vollständig entfernt.
+- Alle relevanten Datumsfelder sind wieder echte native `<input type="date">`.
+- Alle `date-input` Klassen und Datum-Patterns wurden entfernt.
+- Kalender-Picker sollte wieder erscheinen.
+- CSS enthält nur noch Breitenkorrektur für native Date-Felder.
+
+Wichtig nach GitHub Upload:
+- GitHub Pages kann 1–2 Minuten brauchen.
+- Danach auf dem iPhone Safari die Seite hart neu laden oder im privaten Tab testen.
