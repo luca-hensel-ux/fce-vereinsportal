@@ -72,3 +72,15 @@ Für GitHub hochladen:
 
 Nicht hochladen:
 - `backend/`
+
+
+## Release V1.4.2
+
+Korrekturen:
+- Datumsfelder auf iPhone/Safari von nativen Date-Pickern auf schmale Textfelder im Format `TT.MM.JJJJ` umgestellt.
+- Eingabe wird automatisch als `TT.MM.JJJJ` formatiert.
+- Vor dem Absenden wird das Datum intern wieder als `YYYY-MM-DD` an Google Apps Script übertragen.
+- Kreditinstitut-Ermittlung aus deutscher IBAN verbessert:
+  - lokale BLZ-Liste erweitert
+  - Online-Fallback über OpenIBAN bleibt optional
+  - manuelle Eingabe bleibt möglich

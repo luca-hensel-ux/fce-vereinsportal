@@ -1,5 +1,27 @@
 @media(max-width:900px){
 
+  .field-card,
+  .grid,
+  .grid > *,
+  label{
+    min-width:0;
+    max-width:100%;
+    overflow:hidden;
+  }
+  input,
+  input.date-input{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    box-sizing:border-box;
+  }
+  input.date-input{
+    -webkit-appearance:none;
+    appearance:none;
+    font-variant-numeric:tabular-nums;
+  }
+
+
   input[type="date"]{
     width:100%;
     max-width:100%;

@@ -7,18 +7,24 @@ const CONFIG = {
   bankByBlz: {
     "66650085": "Sparkasse Pforzheim Calw",
     "66690000": "Volksbank pur eG",
-    "60050101": "BW-Bank",
-    "66010075": "Postbank",
     "66691200": "Volksbank pur eG",
     "66692300": "Volksbank pur eG",
     "66662220": "VR Bank Enz plus eG",
     "66661244": "Raiffeisenbank im Kreis Calw eG",
     "66670006": "Deutsche Bank",
     "66680013": "Commerzbank",
+    "66010075": "Postbank",
     "60010070": "Postbank Stuttgart",
     "60040071": "Commerzbank Stuttgart",
+    "60050101": "BW-Bank",
     "60070070": "Deutsche Bank Stuttgart",
-    "60090100": "Volksbank Stuttgart eG"
+    "60090100": "Volksbank Stuttgart eG",
+    "60090800": "Sparda-Bank Baden-Württemberg",
+    "60350130": "Sparkasse Pforzheim Calw",
+    "62050000": "Sparkasse Heilbronn",
+    "67250020": "Sparkasse Heidelberg",
+    "66250030": "Sparkasse Karlsruhe",
+    "66050101": "Sparkasse Karlsruhe"
   }
 };
 
@@ -126,11 +132,12 @@ function addFamilyRow() {
   row.innerHTML = `
     <label>Vorname<input name="fam_vorname" placeholder="Vorname"></label>
     <label>Nachname<input name="fam_nachname" placeholder="Nachname"></label>
-    <label>Geburtsdatum<input type="date" name="fam_geburtsdatum"></label>
+    <label>Geburtsdatum<input type="text" class="date-input" inputmode="numeric" name="fam_geburtsdatum" placeholder="TT.MM.JJJJ" pattern="\\d{2}\\.\\d{2}\\.\\d{4}"></label>
     <button type="button" class="outline-btn">Entfernen</button>
   `;
   row.querySelector("button").addEventListener("click", () => row.remove());
   document.getElementById("familyList").appendChild(row);
+  initDateInputs();
 }
 
 function getFamilyMembers() {
@@ -148,17 +155,19 @@ function initIban() {
   const hint = document.getElementById("bankHint");
   let lookupTimer = null;
 
+  if (!iban || !bankField || !hint) return;
+
+  hint.textContent = "Bei deutschen IBANs wird das Kreditinstitut automatisch aus der Bankleitzahl ermittelt, sofern möglich.";
+
   iban.addEventListener("input", event => {
     const clean = event.target.value.replace(/\s/g, "").toUpperCase();
     event.target.value = clean.replace(/(.{4})/g, "$1 ").trim();
 
-    bankField.dataset.autoFilled = "false";
-
-    if (lookupTimer) {
-      clearTimeout(lookupTimer);
-    }
+    if (lookupTimer) clearTimeout(lookupTimer);
 
     if (!clean.startsWith("DE") || clean.length < 12) {
+      bankField.value = bankField.dataset.autoFilled === "true" ? "" : bankField.value;
+      bankField.dataset.autoFilled = "false";
       hint.textContent = "Bitte IBAN vollständig eingeben. Bei deutschen IBANs wird das Kreditinstitut automatisch ermittelt, sofern möglich.";
       return;
     }
@@ -172,37 +181,33 @@ function initIban() {
       return;
     }
 
-    hint.textContent = "Bank wird geprüft ...";
+    hint.textContent = "Kreditinstitut wird geprüft ...";
 
     lookupTimer = setTimeout(async () => {
       const bankName = await lookupBankName(clean);
-
       if (bankName) {
         bankField.value = bankName;
         bankField.dataset.autoFilled = "true";
         hint.textContent = "Kreditinstitut automatisch aus der IBAN ermittelt.";
       } else {
-        hint.textContent = "Bank konnte nicht automatisch ermittelt werden. Bitte Kreditinstitut manuell eintragen.";
+        bankField.dataset.autoFilled = "false";
+        hint.textContent = "Kreditinstitut konnte nicht automatisch ermittelt werden. Bitte manuell eintragen.";
       }
-    }, 450);
+    }, 350);
   });
 }
 
 async function lookupBankName(iban) {
-  // 1) Lokaler Fallback über die deutsche BLZ
   const clean = iban.replace(/\s/g, "").toUpperCase();
+
   if (clean.startsWith("DE") && clean.length >= 12) {
     const blz = clean.substring(4, 12);
-    if (CONFIG.bankByBlz[blz]) {
-      return CONFIG.bankByBlz[blz];
-    }
+    if (CONFIG.bankByBlz[blz]) return CONFIG.bankByBlz[blz];
   }
 
-  // 2) Öffentlicher IBAN-Validator als Komfortfunktion
-  // Falls der Dienst nicht erreichbar ist oder CORS blockiert, fällt die Funktion sauber auf manuelle Eingabe zurück.
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 3000);
+    const timeout = setTimeout(() => controller.abort(), 2500);
 
     const response = await fetch(
       "https://openiban.com/validate/" + encodeURIComponent(clean) + "?getBIC=true&validateBankCode=true",
@@ -210,18 +215,65 @@ async function lookupBankName(iban) {
     );
 
     clearTimeout(timeout);
-
     if (!response.ok) return "";
 
     const result = await response.json();
     const bankData = result.bankData || {};
-
     return bankData.name || bankData.bankName || bankData.bank || "";
   } catch (error) {
     return "";
   }
 }
 
+function initDateInputs() {
+  document.querySelectorAll(".date-input").forEach(input => {
+    input.addEventListener("input", () => {
+      let value = input.value.replace(/\D/g, "").slice(0, 8);
+
+      if (value.length >= 5) {
+        value = value.replace(/(\d{2})(\d{2})(\d{1,4})/, "$1.$2.$3");
+      } else if (value.length >= 3) {
+        value = value.replace(/(\d{2})(\d{1,2})/, "$1.$2");
+      }
+
+      input.value = value;
+    });
+
+    input.addEventListener("blur", () => {
+      if (!input.value) return;
+
+      const match = input.value.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+      if (!match) return;
+
+      const day = Number(match[1]);
+      const month = Number(match[2]);
+      const year = Number(match[3]);
+      const date = new Date(year, month - 1, day);
+
+      const valid =
+        date.getFullYear() === year &&
+        date.getMonth() === month - 1 &&
+        date.getDate() === day;
+
+      if (!valid) {
+        input.setCustomValidity("Bitte ein gültiges Datum im Format TT.MM.JJJJ eingeben.");
+      } else {
+        input.setCustomValidity("");
+      }
+    });
+  });
+}
+
+function normalizeDateForBackend(value) {
+  const text = String(value || "").trim();
+
+  const de = text.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+  if (de) {
+    return `${de[3]}-${de[2]}-${de[1]}`;
+  }
+
+  return text;
+}
 function initSignature() {
   const canvas = document.getElementById("signature");
   const ctx = canvas.getContext("2d");
@@ -282,8 +334,13 @@ function collectFormData() {
   data.datenschutz = fd.has("datenschutz");
   data.sepa = fd.has("sepa");
   data.foto = fd.has("foto");
+  data.geburtsdatum = normalizeDateForBackend(data.geburtsdatum);
+  data.eintrittsdatum = normalizeDateForBackend(data.eintrittsdatum);
   data.signature = document.getElementById("signature").toDataURL("image/png");
-  data.familienmitglieder = getFamilyMembers();
+  data.familienmitglieder = getFamilyMembers().map(member => ({
+    ...member,
+    geburtsdatum: normalizeDateForBackend(member.geburtsdatum)
+  }));
 
   return data;
 }
@@ -338,6 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initMembershipCards();
   initFamily();
   initIban();
+  initDateInputs();
   initSignature();
   initSubmit();
 });
